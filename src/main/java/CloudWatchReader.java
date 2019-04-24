@@ -5,6 +5,8 @@ import software.amazon.awssdk.services.cloudwatchlogs.model.DescribeLogStreamsRe
 import software.amazon.awssdk.services.cloudwatchlogs.model.GetLogEventsRequest;
 import software.amazon.awssdk.services.cloudwatchlogs.model.InputLogEvent;
 import software.amazon.awssdk.services.cloudwatchlogs.model.PutLogEventsRequest;
+import software.amazon.awssdk.services.iam.IamClient;
+import software.amazon.awssdk.services.iam.model.GetRolePolicyRequest;
 
 import java.util.Arrays;
 
@@ -27,8 +29,19 @@ public class CloudWatchReader {
      * Write a log, then read logs back.
      */
     public static void main(String[] args) {
+
+        checkPermissions();
         writeLogs();
         getLogs();
+    }
+
+    /**
+     * Check the permissions of the current user.
+     */
+    private static void checkPermissions() {
+
+        IamClient client = IamClient.builder().region(Region.AWS_GLOBAL).build();
+        client.getAccountSummary();
     }
 
     /**
@@ -79,7 +92,6 @@ public class CloudWatchReader {
         String firstLogStreamName = logsClient.describeLogStreams(build).logStreams().get(0).logStreamName();
 
         // Get a page of log events from the first stream in the log group and print it to the console.
-
         logsClient.getLogEvents(GetLogEventsRequest.builder()
                                                    .logStreamName(firstLogStreamName)
                                                    .logGroupName(getLogGroupName())
