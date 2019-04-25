@@ -3,6 +3,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cloudwatchlogs.CloudWatchLogsClient;
 import software.amazon.awssdk.services.cloudwatchlogs.model.DescribeLogStreamsRequest;
 import software.amazon.awssdk.services.cloudwatchlogs.model.GetLogEventsRequest;
+import software.amazon.awssdk.services.cloudwatchlogs.model.GetLogRecordRequest;
 import software.amazon.awssdk.services.cloudwatchlogs.model.InputLogEvent;
 import software.amazon.awssdk.services.cloudwatchlogs.model.PutLogEventsRequest;
 import software.amazon.awssdk.services.iam.IamClient;
@@ -20,7 +21,7 @@ import java.util.Arrays;
  * AWS_REGION (eg. us-east-1)
  * AWS_LOG_GROUP (eg. test-logs)
  */
-public class CloudWatchReader {
+public class CloudWatchTester {
 
     public static final String AWS_REGION_ENVIRONMENT_VARIABLE = "AWS_REGION";
     public static final String LOG_GROUP_NAME = "AWS_LOG_GROUP";
@@ -55,7 +56,7 @@ public class CloudWatchReader {
         InputLogEvent logEvent = InputLogEvent.builder().message(logMessageText).timestamp(DateTime.now().getMillis()).build();
 
         CloudWatchLogsClient logsClient = CloudWatchLogsClient.builder()
-                                                              .region(Region.of(System.getenv(AWS_REGION_ENVIRONMENT_VARIABLE)))
+                                                              .region(Region.US_EAST_1)
                                                               .build();
 
         // Get the first log stream name. We'll pull logs from this for now.
